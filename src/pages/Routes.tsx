@@ -137,7 +137,7 @@ export default function Routes() {
                   <TableCell>{route.creador.nombre}</TableCell>
                   <TableCell>{route.distancia} km</TableCell>
                   <TableCell>{getDifficultyBadge(route.dificultad)}</TableCell>
-                  <TableCell>${route.precio.toFixed(2)}</TableCell>
+                  <TableCell>${Number(route.precio || 0).toFixed(2)}</TableCell>
                   <TableCell>{getStatusBadge(route.estado)}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex gap-2 justify-end">

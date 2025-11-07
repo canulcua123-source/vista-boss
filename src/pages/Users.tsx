@@ -130,7 +130,10 @@ export default function Users() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => setDeleteId(user.id)}
+                      onClick={() => {
+                        console.log('Delete clicked for user:', user.id);
+                        setDeleteId(user.id);
+                      }}
                       className="text-destructive hover:text-destructive hover:bg-destructive/10"
                     >
                       <Trash2 className="h-4 w-4" />
@@ -143,17 +146,22 @@ export default function Users() {
         </CardContent>
       </Card>
 
-      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+      <AlertDialog open={deleteId !== null} onOpenChange={(open) => {
+        if (!open) setDeleteId(null);
+      }}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>¿Estás seguro?</AlertDialogTitle>
             <AlertDialogDescription>
-              Esta acción no se puede deshacer. El usuario será eliminado permanentemente.
+              Esta acción no se puede deshacer. El usuario será eliminado permanentemente de la base de datos.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancelar</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-destructive hover:bg-destructive/90">
+            <AlertDialogCancel onClick={() => setDeleteId(null)}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction 
+              onClick={handleDelete} 
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
               Eliminar
             </AlertDialogAction>
           </AlertDialogFooter>

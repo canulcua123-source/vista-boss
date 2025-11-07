@@ -106,7 +106,20 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(userData),
     });
-    if (!response.ok) throw new Error('Error al crear usuario');
+    if (!response.ok) {
+      let errorMessage = 'Error al crear usuario';
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || JSON.stringify(errorData);
+      } catch (e) {
+        try {
+          errorMessage = await response.text();
+        } catch (e) {
+          // Fallback if text() also fails
+        }
+      }
+      throw new Error(errorMessage);
+    }
   },
 
   updateUser: async (id: number, userData: Partial<User>): Promise<void> => {

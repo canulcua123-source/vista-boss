@@ -8,14 +8,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { Trash2, UserPlus } from "lucide-react";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { AddUserForm } from "@/components/AddUserForm";
 
 export default function Users() {
   const [users, setUsers] = useState<User[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<number | null>(null);
+  const [isAddUserOpen, setAddUserOpen] = useState(false);
   const { toast } = useToast();
 
   const fetchUsers = async () => {
+    setIsLoading(true);
     try {
       const data = await api.getUsers();
       setUsers(data);
@@ -104,10 +108,25 @@ export default function Users() {
           <h1 className="text-3xl font-bold">Usuarios</h1>
           <p className="text-muted-foreground mt-2">Gestión de usuarios de la plataforma</p>
         </div>
-        <Button className="bg-gradient-primary hover:opacity-90">
-          <UserPlus className="mr-2 h-4 w-4" />
-          Nuevo Usuario
-        </Button>
+        <Dialog open={isAddUserOpen} onOpenChange={setAddUserOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-gradient-primary hover:opacity-90">
+              <UserPlus className="mr-2 h-4 w-4" />
+              Nuevo Usuario
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Añadir Nuevo Usuario</DialogTitle>
+            </DialogHeader>
+            <AddUserForm 
+              onUserAdded={() => {
+                fetchUsers();
+              }} 
+              setOpen={setAddUserOpen}
+            />
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Card className="shadow-medium">

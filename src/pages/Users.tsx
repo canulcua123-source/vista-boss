@@ -45,9 +45,22 @@ export default function Users() {
       });
       fetchUsers();
     } catch (error) {
+      console.error('Delete user error:', error);
+      let errorMessage = "No se pudo eliminar el usuario";
+      
+      if (error instanceof Error) {
+        if (error.message.includes('500')) {
+          errorMessage = "Error del servidor: El usuario no puede ser eliminado (posiblemente tiene datos relacionados o es un administrador)";
+        } else if (error.message.includes('403')) {
+          errorMessage = "No tienes permisos para eliminar este usuario";
+        } else if (error.message.includes('404')) {
+          errorMessage = "El usuario no fue encontrado";
+        }
+      }
+      
       toast({
         title: "Error",
-        description: "No se pudo eliminar el usuario",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -134,7 +147,9 @@ export default function Users() {
                         console.log('Delete clicked for user:', user.id);
                         setDeleteId(user.id);
                       }}
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={user.rol?.toLowerCase() === 'admin'}
+                      title={user.rol?.toLowerCase() === 'admin' ? 'No se puede eliminar administradores' : undefined}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>

@@ -123,7 +123,20 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
-    if (!response.ok) throw new Error('Error al eliminar usuario');
+    if (!response.ok) {
+      let details = '';
+      try {
+        const data = await response.json();
+        details = (data?.message || data?.error || JSON.stringify(data)) ?? '';
+      } catch {
+        try {
+          details = await response.text();
+        } catch {
+          details = response.statusText;
+        }
+      }
+      throw new Error(`DELETE_USER_FAILED:${response.status}:${details}`);
+    }
   },
 
   // Routes

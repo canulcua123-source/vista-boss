@@ -54,7 +54,7 @@ export default function Transactions() {
     );
   }
 
-  const totalAmount = transactions.reduce((sum, t) => sum + t.monto, 0);
+  const totalAmount = transactions.reduce((sum, t) => sum + Number(t.monto || 0), 0);
 
   return (
     <div className="p-8">

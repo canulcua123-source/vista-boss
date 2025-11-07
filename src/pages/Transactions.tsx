@@ -94,7 +94,7 @@ export default function Transactions() {
                   <TableCell>{getTypeBadge(transaction.tipo)}</TableCell>
                   <TableCell>{transaction.ruta?.nombre || 'N/A'}</TableCell>
                   <TableCell className="text-right font-medium">
-                    ${transaction.monto.toFixed(2)}
+                    ${Number(transaction.monto || 0).toFixed(2)}
                   </TableCell>
                 </TableRow>
               ))}
